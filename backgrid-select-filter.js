@@ -6,7 +6,27 @@
   Written by Martin Drapeau
   Licensed under the MIT @license
  */
-(function(){
+(function (root, factory) {
+
+  // CommonJS
+  if (typeof exports == "object") {
+    module.exports = factory(require("underscore"),
+                             require("backbone"),
+                             require("backgrid"));
+  }
+  // AMD. Register as an anonymous module.
+  else if (typeof define === 'function' && define.amd) {
+    define(['underscore', 'backbone', 'backgrid'], factory);
+  }
+  // Browser
+  else {
+    factory(root._, root.Backbone, root.Backgrid);
+  }
+
+}(this, function (_, Backbone, Backgrid) {
+
+  "use strict";
+
   var SelectFilter = Backgrid.Extension.SelectFilter = Backbone.View.extend({
     tagName: "select",
     className: "backgrid-filter",
@@ -61,7 +81,7 @@
         options: this.selectOptions,
         initialValue: this.initialValue
       }));
-			this.onChange();
+            this.onChange();
       return this;
     },
     currentValue: function() {
@@ -82,4 +102,5 @@
         col.reset(this.shadowCollection.models, {reindex: false});
     }
   });
-}).call(this);
+
+}));
